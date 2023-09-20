@@ -41,6 +41,12 @@ while True:
             window['-TEXTBOX-'].update(file.read_text())
             window['-DOCNAME-'].update(file_path.split('/')[-1])
 
+    if event == 'Save':
+        file_path = sg.popup_get_file('Save as', no_window = True, save_as = True) + '.txt'
+        file = Path(file_path)
+        file.write_text(values['-TEXTBOX-'])
+        window['-DOCNAME-'].update(file_path.split('/')[-1])
+
     if event == 'Word count':
         full_text = values['-TEXTBOX-']
         clean_text = full_text.replace('\n', ' ').split(' ')
