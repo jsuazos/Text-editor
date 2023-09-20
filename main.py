@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+from pathlib import Path
 
 smileys = [
     'happy',[':)','xD',':D','<3'],
@@ -21,7 +22,7 @@ layout = [
     [sg.Text('Untitled', key = '-DOCNAME-')],
     [sg.Multiline(
         no_scrollbar = True, 
-        size = (50, 30), 
+        size = (80, 30), 
         key = '-TEXTBOX-')]
 ]
 
@@ -33,6 +34,13 @@ while True:
     if event == sg.WINDOW_CLOSED:
         break
 
+    if event == 'Open':
+        file_path = sg.popup_get_file('open', no_window = True)
+        if file_path:
+            file = Path(file_path)
+            window['-TEXTBOX-'].update(file.read_text())
+            window['-DOCNAME-'].update(file_path.split('/')[-1])
+
     if event == 'Word count':
         full_text = values['-TEXTBOX-']
         clean_text = full_text.replace('\n', ' ').split(' ')
@@ -40,5 +48,9 @@ while True:
         char_count = len(''.join(clean_text))
         sg.popup(f'Palabras: {word_count}\nCaracteres: {char_count}')
         
+    if event in smiley_events:
+        current_text = values['-TEXTBOX-']
+        new_text = current_text + ' ' + event
+        window['-TEXTBOX-'].update(new_text)
 
 window.close()
